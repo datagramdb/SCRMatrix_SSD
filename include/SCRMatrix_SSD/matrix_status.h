@@ -42,6 +42,10 @@ namespace SCRMatrix_SSD {
         bool first_insertion;
         ssize_t offset;
         std::string matrix_folder;
+
+        /// Storage of the column index in primary memory
+        /// TODO: if it doesn't fit, then extend in a double way, so that either the index loaded in primary or the one
+        ///       directly memory mapped could be used.
         yaucl::structures::rbtree::RBTree<size_t, std::pair<size_t, size_t>>* index_in_memory;
 
         double* nzcells_values;

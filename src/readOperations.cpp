@@ -24,14 +24,16 @@
 using namespace SCRMatrix_SSD;
 
 void SCRMatrix_SSD::print_matrix(SCRMatrix_SSD:: matrix_status &M) {
+    // Do not print the matrix if the matrix is not open on read!
+    if ((!M.col_fd) || (!M.row_fd) || (!M.cell_fd))
+        return;
+
     ssize_t curr_row_offset = -1, next_row_offset = -1;
     double val = 0; size_t col = 0;
     ssize_t curr_row = -1, next_row = -1;
     size_t matrix_rowoffsets_offset = 0;
-#ifdef DEBUG
     std::cout << "Printing the matrix:" << std::endl;
     std::cout << "--------------------" << std::endl;
-#endif
     while ((curr_row_offset==-1) && (curr_row < (ssize_t)M.nrows)) {
         curr_row_offset = M.matrix_rowoffsets[matrix_rowoffsets_offset++];
         //fread(&curr_row_offset, sizeof(ssize_t), 1, matrix_status_holder.rowfd);
@@ -60,16 +62,19 @@ void SCRMatrix_SSD::print_matrix(SCRMatrix_SSD:: matrix_status &M) {
         while ((i != next_row_offset) && (i < M.nz_cells)) {
             val = M.nzcells_values[i];
             col = M.nzcells_colids[i];
-#ifdef DEBUG
             std::cout << "M(" << curr_row << ',' << col << ") = " << val << std::endl;
-#endif
             i++;
         }
 #endif
     }
 }
 
+#include <cassert>
+
 double SCRMatrix_SSD::getValue(SCRMatrix_SSD:: matrix_status &M, size_t i, size_t j) {
+    // Check whether the matrix is open on read. Otherwise, abort
+    assert ((!M.col_fd) || (!M.row_fd) || (!M.cell_fd));
+
     // If i exceedes the maximum number of the serialized rows, necessarily the associated value is zero!
     if (i>=M.nrows)
         return 0.0;

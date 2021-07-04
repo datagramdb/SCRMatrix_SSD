@@ -26,11 +26,22 @@
 
 namespace SCRMatrix_SSD {
 
+    /**
+     * If the matrix M is open on read, prints all the non zero-value by row
+     * @param M
+     */
     void print_matrix(struct matrix_status& M);
 
 
-
-
+    /**
+     * If the matrix M is open on read, returns the value M[i,j]. 0 is returned if goes beyond the matrix limits, or
+     * if the non-zero cell is not there.
+     *
+     * @param M     Matrix, that should be open on read
+     * @param i     Row id, counting from zero
+     * @param j     Column id, counting from zero
+     * @return      Value associated to the matrix, if exists. Otherwise, 0.0 is returned
+     */
     double getValue(struct matrix_status& M, size_t i, size_t j);
 
 #if 0
